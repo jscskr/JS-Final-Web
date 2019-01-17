@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE configuration
+  PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-config.dtd">
+  
+	<configuration>
+	
+		<typeAliases>
+	  		<typeAlias type="js.admin.model.Location" alias="location"/>
+	  		<typeAlias type="js.admin.model.Street" alias="street"/>
+	  		<typeAlias type="js.user.model.Rv_Board" alias="rv_board"/>
+	  		<typeAlias type="js.user.model.Rv_board_android" alias="rv_board_android"/>
+	  		<typeAlias type="js.user.model.Member" alias="Member" />
+			<typeAlias type="js.user.model.Comment" alias="Comment"/>
+			<typeAlias type="js.user.model.Message" alias="Message"/>
+			<typeAlias type="js.user.model.Follow" alias="Follow"/>
+			<typeAlias type="js.user.model.FollowMemberPic" alias="FollowMemberPic"/>
+			<typeAlias type="js.user.model.Introduction" alias="Introduction"/>
+			<typeAlias type="js.user.model.FollowPic" alias="FollowPic"/>
+			<typeAlias type="js.user.model.MemberIntroAll" alias="MemberIntroAll"/>
+	  		<typeAlias type="js.admin.model.Member" alias="ADMember"/>
+	  		<typeAlias type="js.admin.model.Notice" alias="Notice"/>
+	  		<typeAlias type="js.admin.model.Question" alias="Question"/>
+	  		<typeAlias type="js.user.model.memberUpdate" alias="memberUpdate"/>	
+	  		<typeAlias type="js.user.model.Rv_Board" alias="Rv_board"/>
+	  		<typeAlias type="js.user.model.Alert" alias="alert"/>
+  		<typeAlias type="js.user.model.Report" alias="Report"/>
+	  		<typeAlias type="js.user.model.Reply" alias="Reply"/>
+	  		<typeAlias type="js.user.model.Question_Reply" alias="Question_Reply"/>
+	  		<typeAlias type="js.user.model.Best_Board" alias="Best_Board"/>
+	  		 <typeAlias type="js.user.model.Friend" alias="Friend"/>
+            <typeAlias type="js.user.model.Report" alias="Report"/>
+	  		
+	  	</typeAliases>
+  	  	
+	</configuration>
+
+	
+  
+  	
+  	
+  	
+ 

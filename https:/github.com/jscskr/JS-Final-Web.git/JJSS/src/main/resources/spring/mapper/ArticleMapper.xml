@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+    
+<mapper namespace="model.ArticleMapper">
+	
+	<select id="articleList" resultType="Rv_Board">
+		select * 
+		from rv_board
+		order by rv_board_post_date desc
+			
+	
+		
+	</select>
+	
+	<insert id="articleAlert" parameterType="Alert">
+		insert into 
+		alert
+		(rv_board_index, member_id, alert_date)
+		values (#{rv_board_index}, #{member_id}, now())
+	</insert>
+		
+	<!-- district 에서 location_id로 바뀜 쿼리에 넣을 숫자값 나중에 조정해야함-->	
+	<insert id="articleWrite" parameterType="Rv_Board">
+		insert into 
+			rv_Board
+			( member_id, rv_board_title, rv_board_content, rv_board_Street_name_address, rv_board_picture, rv_board_post_date)
+			values ( #{member_id},  #{rv_board_title}, #{rv_board_content}, #{rv_board_Street_name_address}, #{rv_board_picture}, now())
+	</insert>
+	
+	<delete id="articleDelete" parameterType="Rv_Board">
+		delete from 
+		Rv_Board
+		where rv_board_index = #{rv_board_index}
+	</delete>
+	
+	<update id="articleUpdate" parameterType="Rv_Board">
+		update 
+		Rv_Board
+		set
+		rv_board_modify_date = now(), rv_board_content = #{rv_board_content}, location_id = #{location_id}
+		where rv_board_index = #{rv_board_index}
+	</update>
+	
+	<select id="replyList" resultType="Reply">
+		select * 
+		from reply
+		where rv_board_index = #{rv_board_index}
+		order by reply_post_date desc
+	</select>
+	
+	<insert id="insertReply" parameterType="Reply">
+		insert into 
+		reply
+		(reply_post_date, member_id, rv_board_index, reply_content)
+		values (now(), #{member_id}, #{rv_board_index}, #{reply_content})
+	</insert>
+	
+	<!-- 유저 프로필에서 자기가쓴글 보 -->
+	<select id="User_RvBoard_List" resultType="Rv_Board">
+		select * from rv_board where member_id = #{member_id} order by rv_board_index desc
+	</select>
+	
+	<!-- 메인화면 베스트 게시 -->
+	<select id="best_board" resultType="Best_Board">
+		select * from bast_board order by rv_board_index desc LIMIT 3
+	</select>
+	
+
+	<!-- 검색 시 메인페이지 셀렉트 메서드 -->
+	<select id="board_search" parameterType="List"	resultType="Rv_Board">
+		select * from rv_board
+		where rv_board_Street_name_address like CONCAT('%',#{address},'%')
+		order by rv_board_post_date desc
+	</select>
+
+<!-- 	select * from rv_board
+		where rv_board_Street_name_address like '%#{address}%'
+		order by rv_board_post_date desc -->
+
+
+
+	
+</mapper>
+
+
+

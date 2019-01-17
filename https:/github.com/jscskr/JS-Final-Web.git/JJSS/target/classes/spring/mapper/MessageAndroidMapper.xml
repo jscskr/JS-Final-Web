@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="MessageMapper_android">
+	<insert id="sendMessage" parameterType="message">
+		insert into sendMessage
+		values(#{message_id},#{member_id},#{member_receiver},#{message_title},#{message_content},#{message_picture},#{message_profil_pic},#{message_send_date})
+	</insert>
+
+	<insert id="receiveMessage" parameterType="message">
+		insert into receiveMessage
+		values(#{message_id},#{member_id},#{member_receiver},#{message_title},#{message_content},#{message_picture},#{message_profil_pic},#{message_send_date})
+	</insert>
+
+	<select id="receiveMessageStore" parameterType="message"
+		resultType="message">
+		select * from receiveMessage where member_receiver = #{member_id} order by message_id desc
+	</select>
+	
+	<select id="sendMessageStore" parameterType="message"
+		resultType="message">
+		select * from sendMessage where member_id = #{member_id} order by message_id desc
+	</select>
+
+	<select id="receiveMessageStoreSelected" parameterType="message"
+		resultType="message">
+		select * from receiveMessage where message_id = #{message_id}
+	</select>
+	
+	<select id="sendMessageStoreSelected" parameterType="message"
+		resultType="message">
+		select * from sendMessage where message_id = #{message_id}
+	</select>
+	
+	
+	<delete id="deleteReceiveMessage" parameterType="message">
+	delete from receiveMessage where message_id = #{message_id}
+	</delete>
+	
+	<delete id="deleteSendMessage" parameterType="message">
+	delete from sendMessage where message_id = #{message_id}
+	</delete>
+	
+	
+	<!-- 신고(메시지) -->
+	<insert id="insertReportMessage" parameterType="Report">
+	insert into reportTypeAll values(-1,#{rv_board_title},#{rv_board_content},#{rv_board_picture},-1,#{alert_reason},#{message_id},#{message_title},#{message_content},#{message_picture},#{report_reason},#{report_member_id},#{reporter_member_id},#{report_date})
+	</insert>
+	
+	<!-- 해당 메시지 이미 신고한 유저가 중복 신고하는건지 검사 -->
+	<select id="alreadyReportMessage" parameterType="Report" resultType="Report">
+	select * from reportTypeAll where message_id = #{message_id} and reporter_member_id = #{reporter_member_id}
+	</select>
+	
+	
+
+</mapper>

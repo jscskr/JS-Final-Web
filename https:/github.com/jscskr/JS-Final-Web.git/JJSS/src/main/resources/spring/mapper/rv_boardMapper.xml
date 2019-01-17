@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+   <mapper namespace="js.user.model.rv_boardMapper">
+   <select id="rv_board" resultType="Rv_Board">
+   		select * from rv_board
+   
+   </select>
+		   <!-- 안드로이드 게시판 수정일 2019/01/09 18:07-->
+		   <!-- 리뷰 게시글 작성 -->
+			<insert id="writeRvBoard" parameterType="rv_board_android">
+			insert into rv_board_android values(#{rv_board_index},#{rv_board_post_date},#{member_id},#{rv_board_title},#{rv_board_content},#{rv_board_location},#{rv_board_picture},#{member_profile},#{rv_board_comments},#{rv_board_recommend},#{rv_board_heart},#{rv_board_count})
+			</insert>
+			   <!-- 모든 리뷰 게시글 불러오기 -->
+			<select id="selectAllRvBoard" resultType="rv_board_android">
+			select * from rv_board_android order by rv_board_index desc
+			</select>
+			
+			<!-- 선택된 리뷰 게시글 불러오기 -->
+			<select id="rv_boardSelected" parameterType="rv_board_android" resultType="rv_board_android">
+			select * from rv_board_android where rv_board_index = #{rv_board_index}
+			</select>
+			
+			<!-- 게시글에 댓글 달기 -->
+			<insert id="rv_board_insertAlert" parameterType="alert">
+			insert into alert values(#{alert_index},#{rv_board_index},#{member_id},#{member_profile},#{alert_reason},#{alert_date})
+			</insert>
+			
+			<!-- 특정 게시글의 댓글 모두 불러오기 -->
+			<select id="rv_boardLoadAlert" parameterType="alert" resultType="alert">
+			select * from alert where rv_board_index = #{rv_board_index} order by alert_index desc
+			</select>
+			
+			<!-- 각 게시판의 댓글 갯수 불러오기 -->
+			<select id="rv_boardCountAlert" parameterType="rv_board_android" resultType="java.lang.Integer">
+			select count(*) from alert where rv_board_index=#{rv_board_index}
+			</select>
+			
+			<!-- 게시판 좋아요 -->
+			<insert id="rv_board_favorite" parameterType="map">
+			insert into rv_board_favorite values(#{rv_board_index},#{member_id})
+			</insert>
+			
+			<!-- 게시판 좋아요 중복판별 (게시글 빨강하트도 이걸로) -->
+			<select id="rv_board_duplicated" parameterType="map" resultType="java.lang.String">
+			select member_id from rv_board_favorite where rv_board_index=#{rv_board_index} and member_id=#{member_id} 
+			</select>
+			
+			<!-- 게시판 좋아요 삭제 -->
+			<delete id="rv_board_favoriteDelete" parameterType="map">
+			delete from rv_board_favorite where rv_board_index=#{rv_board_index} and member_id = #{member_id}
+			</delete>
+			
+			<!-- 각 게시판의 좋아요 갯수 불러오기 -->
+			<select id="rv_board_favoriteCount" parameterType="rv_board_android" resultType="java.lang.Integer">
+			select count(*) from rv_board_favorite where rv_board_index=#{rv_board_index}
+			</select>
+			
+			<!-- 게시글 클릭시 조회수 증가 -->
+			<update id="rv_board_countUp" parameterType="rv_board_android">
+			update rv_board_android set rv_board_count = rv_board_count+1 where rv_board_index = #{rv_board_index};
+			</update>
+	
+			<!-- 게시글 삭제 -->
+	<delete id="deleteRv_board" parameterType="rv_board_android">
+	delete from rv_board_android where rv_board_index =#{rv_board_index} 
+	</delete>
+			<!-- 신고(게시글) -->
+	<insert id="insertReportRv_board" parameterType="Report">
+	insert into reportTypeAll values(#{rv_board_index},#{rv_board_title},#{rv_board_content},#{rv_board_picture},-1,#{alert_reason},-1,#{message_title},#{message_content},#{message_picture},#{report_reason},#{report_member_id},#{reporter_member_id},#{report_date})
+	</insert>
+	
+	<!-- 해당 게시글 이미 신고한 유저가 중복 신고하는건지 검사 -->
+	<select id="alreadyReportRv_board" parameterType="Report" resultType="Report">
+	select * from reportTypeAll where rv_board_index = #{rv_board_index} and reporter_member_id = #{reporter_member_id}
+	</select>
+	<!-- 신고(댓글) -->
+	<insert id="insertReportAlert" parameterType="Report">
+	insert into reportTypeAll values(-1,#{rv_board_title},#{rv_board_content},#{rv_board_picture},#{alert_index},#{alert_reason},-1,#{message_title},#{message_content},#{message_picture},#{report_reason},#{report_member_id},#{reporter_member_id},#{report_date})
+	</insert>
+	<!-- 해당 댓글 이미 신고한 유저가 중복 신고하는건지 검사 -->
+	<select id="alreadyReportAlert" parameterType="Report" resultType="Report">
+	select * from reportTypeAll where alert_index = #{alert_index} and reporter_member_id = #{reporter_member_id}
+	</select>
+			<!-- 댓글 삭제 -->
+	<delete id="deleteAlert" parameterType="alert">
+	delete from alert where alert_index =#{alert_index}
+	</delete>
+	<!-- 댓글 클릭시 인덱스 번호로 멤버 찾아서 뿌려줌 -->
+   <select id="findByAlert" parameterType="alert" resultType="Member">
+   select * from member where member_id = #{member_id}
+   </select>
+   
+   <!-- 게시글 안에 멤버이름혹은 멤버프로필 클릭시 인덱스 번호로 멤버 찾아서 뿌려줌 -->
+   <select id="findByBoard" parameterType="rv_board_android" resultType="Member">
+   select * from member where member_id = #{member_id}
+   </select>
+   
+   <!-- 자기가 쓴 게시글 보기 -->
+   <select id="memberWrote" parameterType="Member" resultType="rv_board_android">
+   select * from rv_board_android where member_id = #{member_id}
+   </select>
+   
+   </mapper>

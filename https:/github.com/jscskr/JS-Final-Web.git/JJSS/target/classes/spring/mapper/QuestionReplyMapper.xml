@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+    
+<mapper namespace="QuestionReplyMapper">
+	
+	
+	<select id="replyList" resultType="Question_Reply">
+		select * 
+		from question_reply
+		where question_id = #{question_id}
+		order by reply_post_date desc
+	</select>
+		
+	<insert id="insertReply" parameterType="Question_Reply">
+		insert into 
+		question_reply
+		(reply_post_date, member_id, question_id, reply_content)
+		values (now(), #{member_id}, #{question_id}, #{reply_content})
+	</insert>
+	
+	
+	<delete id="deleteReply" parameterType="Question_Reply">
+		delete from question_reply
+     	 where reply_index in (#{reply_index})
+		
+	</delete>
+	
+	
+	<update id="updateReply" parameterType="Question_Reply">
+		update 
+		question_reply
+		set
+		reply_post_date = now(), reply_content = #{reply_content}
+		where reply_index = #{reply_index}
+	</update>
+	
+</mapper>
+
+
+
